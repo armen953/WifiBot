@@ -12,10 +12,10 @@ MAKEFILE      = Makefile
 
 CC            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang
 CXX           = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
-DEFINES       = -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.9 $(EXPORT_QMAKE_XARCH_CFLAGS) -g -Wall -W -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -stdlib=libc++ -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.9 $(EXPORT_QMAKE_XARCH_CFLAGS) -g -std=gnu++11 -Wall -W -fPIC $(DEFINES)
-INCPATH       = -I../../WifiBot -I. -I../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Headers -I../../../Qt5.8.0/5.8/clang_64/lib/QtGui.framework/Headers -I../../../Qt5.8.0/5.8/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/AGL.framework/Headers -I. -I../../../Qt5.8.0/5.8/clang_64/mkspecs/macx-clang -F/Users/esirem/Qt5.8.0/5.8/clang_64/lib
+INCPATH       = -I../../WifiBot -I. -I../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Headers -I../../../Qt5.8.0/5.8/clang_64/lib/QtGui.framework/Headers -I../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers -I../../../Qt5.8.0/5.8/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/AGL.framework/Headers -I. -I../../../Qt5.8.0/5.8/clang_64/mkspecs/macx-clang -F/Users/esirem/Qt5.8.0/5.8/clang_64/lib
 QMAKE         = /Users/esirem/Qt5.8.0/5.8/clang_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -36,7 +36,7 @@ DISTNAME      = WifiBot1.0.0
 DISTDIR = /Users/esirem/Desktop/WifiBot/build-WifiBot-Desktop_Qt_5_8_0_clang_64bit-Debug/.tmp/WifiBot1.0.0
 LINK          = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
 LFLAGS        = -headerpad_max_install_names -stdlib=libc++ -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.9 $(EXPORT_QMAKE_XARCH_LFLAGS) -Wl,-rpath,/Users/esirem/Qt5.8.0/5.8/clang_64/lib
-LIBS          = $(SUBLIBS) -F/Users/esirem/Qt5.8.0/5.8/clang_64/lib -framework QtWidgets -framework QtGui -framework QtCore -framework DiskArbitration -framework IOKit -framework OpenGL -framework AGL 
+LIBS          = $(SUBLIBS) -F/Users/esirem/Qt5.8.0/5.8/clang_64/lib -framework QtWidgets -framework QtGui -framework QtCore -framework DiskArbitration -framework IOKit -framework QtNetwork -framework OpenGL -framework AGL 
 AR            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cq
 RANLIB        = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib -s
 SED           = sed
@@ -424,6 +424,7 @@ Makefile: ../WifiBot.pro ../../../Qt5.8.0/5.8/clang_64/mkspecs/features/spec_pre
 		../WifiBot.pro \
 		../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/QtWidgets.prl \
 		../../../Qt5.8.0/5.8/clang_64/lib/QtGui.framework/QtGui.prl \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/QtNetwork.prl \
 		../../../Qt5.8.0/5.8/clang_64/lib/QtCore.framework/QtCore.prl
 	$(QMAKE) -o Makefile ../WifiBot.pro -spec macx-clang CONFIG+=debug CONFIG+=x86_64 CONFIG+=qml_debug
 ../../../Qt5.8.0/5.8/clang_64/mkspecs/features/spec_pre.prf:
@@ -606,6 +607,7 @@ Makefile: ../WifiBot.pro ../../../Qt5.8.0/5.8/clang_64/mkspecs/features/spec_pre
 ../WifiBot.pro:
 ../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/QtWidgets.prl:
 ../../../Qt5.8.0/5.8/clang_64/lib/QtGui.framework/QtGui.prl:
+../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/QtNetwork.prl:
 ../../../Qt5.8.0/5.8/clang_64/lib/QtCore.framework/QtCore.prl:
 qmake: FORCE
 	@$(QMAKE) -o Makefile ../WifiBot.pro -spec macx-clang CONFIG+=debug CONFIG+=x86_64 CONFIG+=qml_debug
@@ -679,7 +681,7 @@ moc_mainwindow.cpp: ../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Header
 		../mainwindow.h \
 		moc_predefs.h \
 		../../../Qt5.8.0/5.8/clang_64/bin/moc
-	/Users/esirem/Qt5.8.0/5.8/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Users/esirem/Qt5.8.0/5.8/clang_64/mkspecs/macx-clang -I/Users/esirem/Desktop/WifiBot -I/Users/esirem/Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Headers -I/Users/esirem/Qt5.8.0/5.8/clang_64/lib/QtGui.framework/Headers -I/Users/esirem/Qt5.8.0/5.8/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Users/esirem/Qt5.8.0/5.8/clang_64/lib ../mainwindow.h -o moc_mainwindow.cpp
+	/Users/esirem/Qt5.8.0/5.8/clang_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/Users/esirem/Qt5.8.0/5.8/clang_64/mkspecs/macx-clang -I/Users/esirem/Desktop/WifiBot -I/Users/esirem/Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Headers -I/Users/esirem/Qt5.8.0/5.8/clang_64/lib/QtGui.framework/Headers -I/Users/esirem/Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers -I/Users/esirem/Qt5.8.0/5.8/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include -F/Users/esirem/Qt5.8.0/5.8/clang_64/lib ../mainwindow.h -o moc_mainwindow.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -712,7 +714,47 @@ main.o: ../main.cpp ../mainwindow.h \
 mainwindow.o: ../mainwindow.cpp ../mainwindow.h \
 		../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
-		ui_mainwindow.h
+		ui_mainwindow.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/QtNetwork \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qtnetworkglobal.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qabstractnetworkcache.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qabstractsocket.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qauthenticator.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qdnslookup.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qhostaddress.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qhostinfo.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qhttpmultipart.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qlocalserver.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qlocalsocket.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkaccessmanager.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkconfigmanager.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkconfiguration.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkcookie.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkcookiejar.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkdatagram.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkdiskcache.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkinterface.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkproxy.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkreply.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkrequest.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworksession.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsctpserver.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsctpsocket.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qssl.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslcertificate.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslcertificateextension.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslcipher.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslconfiguration.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qssldiffiehellmanparameters.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslellipticcurve.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslerror.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslkey.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslpresharedkeyauthenticator.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslsocket.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qtcpserver.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qtcpsocket.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qudpsocket.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qtnetworkversion.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../mainwindow.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 

@@ -35,6 +35,7 @@ public:
     QPushButton *pushButton_4;
     QPushButton *btnConnect;
     QPushButton *btnDeconnect;
+    QPushButton *pushButton_5;
     QFrame *frame_2;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
@@ -70,6 +71,9 @@ public:
         btnDeconnect = new QPushButton(frame);
         btnDeconnect->setObjectName(QStringLiteral("btnDeconnect"));
         btnDeconnect->setGeometry(QRect(320, 140, 113, 32));
+        pushButton_5 = new QPushButton(frame);
+        pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
+        pushButton_5->setGeometry(QRect(520, 40, 113, 32));
         frame_2 = new QFrame(centralWidget);
         frame_2->setObjectName(QStringLiteral("frame_2"));
         frame_2->setGeometry(QRect(10, 10, 641, 481));
@@ -101,6 +105,7 @@ public:
         pushButton_4->setText(QApplication::translate("MainWindow", "D", Q_NULLPTR));
         btnConnect->setText(QApplication::translate("MainWindow", "Connexion", Q_NULLPTR));
         btnDeconnect->setText(QApplication::translate("MainWindow", "Deconnexion", Q_NULLPTR));
+        pushButton_5->setText(QApplication::translate("MainWindow", "PushButton", Q_NULLPTR));
     } // retranslateUi
 
 };
