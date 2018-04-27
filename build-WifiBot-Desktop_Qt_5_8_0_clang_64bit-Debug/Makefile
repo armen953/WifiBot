@@ -678,6 +678,12 @@ compiler_moc_header_clean:
 	-$(DEL_FILE) moc_mainwindow.cpp
 moc_mainwindow.cpp: ../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/QTcpSocket \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qtcpsocket.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/QAbstractSocket \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qabstractsocket.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtCore.framework/Headers/QDebug \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtCore.framework/Headers/qdebug.h \
 		../mainwindow.h \
 		moc_predefs.h \
 		../../../Qt5.8.0/5.8/clang_64/bin/moc
@@ -707,6 +713,12 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_ui
 main.o: ../main.cpp ../mainwindow.h \
 		../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/QTcpSocket \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qtcpsocket.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/QAbstractSocket \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qabstractsocket.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtCore.framework/Headers/QDebug \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtCore.framework/Headers/qdebug.h \
 		../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Headers/QApplication \
 		../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Headers/qapplication.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../main.cpp
@@ -714,47 +726,13 @@ main.o: ../main.cpp ../mainwindow.h \
 mainwindow.o: ../mainwindow.cpp ../mainwindow.h \
 		../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		../../../Qt5.8.0/5.8/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
-		ui_mainwindow.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/QtNetwork \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qtnetworkglobal.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qabstractnetworkcache.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qabstractsocket.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qauthenticator.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qdnslookup.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qhostaddress.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qhostinfo.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qhttpmultipart.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qlocalserver.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qlocalsocket.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkaccessmanager.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkconfigmanager.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkconfiguration.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkcookie.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkcookiejar.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkdatagram.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkdiskcache.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkinterface.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkproxy.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkreply.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworkrequest.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qnetworksession.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsctpserver.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsctpsocket.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qssl.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslcertificate.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslcertificateextension.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslcipher.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslconfiguration.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qssldiffiehellmanparameters.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslellipticcurve.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslerror.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslkey.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslpresharedkeyauthenticator.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qsslsocket.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qtcpserver.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/QTcpSocket \
 		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qtcpsocket.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qudpsocket.h \
-		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qtnetworkversion.h
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/QAbstractSocket \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtNetwork.framework/Headers/qabstractsocket.h \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtCore.framework/Headers/QDebug \
+		../../../Qt5.8.0/5.8/clang_64/lib/QtCore.framework/Headers/qdebug.h \
+		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../mainwindow.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
