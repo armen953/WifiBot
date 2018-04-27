@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    QMainWindow::setFocus();
     ui->setupUi(this);
     this->ui->haut->setArrowType(Qt::UpArrow);
     this->ui->bas->setArrowType(Qt::DownArrow);
@@ -21,6 +22,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_btnConnect_clicked()
 {
+    this->hostname = ui->hostname->text();
+    this->port = ui->port->text().toInt();
 
     this->mySocket = new QTcpSocket(this);
 
@@ -32,7 +35,7 @@ void MainWindow::on_btnConnect_clicked()
     qDebug() << "connecting...";
 
     // this is not blocking call
-    mySocket->connectToHost("https://www.google.com", 80);
+    mySocket->connectToHost(this->hostname, this->port);
 
     // we need to wait...
     if(!mySocket->waitForConnected(5000))
@@ -46,7 +49,7 @@ void MainWindow::connected()
     qDebug() << "connected...";
 
     // Hey server, tell me about you.
-    mySocket->write("HEAD / HTTP/1.0\r\n\r\n\r\n\r\n");
+    mySocket->write("hello");
 }
 
 void MainWindow::disconnected()

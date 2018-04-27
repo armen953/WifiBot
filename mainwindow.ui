@@ -169,10 +169,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>192.168.45.2</string>
+      <string>192.168.1.106</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit">
+    <widget class="QLineEdit" name="port">
      <property name="geometry">
       <rect>
        <x>320</x>
@@ -182,7 +182,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>45554</string>
+      <string>15020</string>
      </property>
     </widget>
     <widget class="QLabel" name="label">
