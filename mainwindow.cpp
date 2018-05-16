@@ -48,8 +48,23 @@ void MainWindow::connected()
 {
     qDebug() << "connected...";
 
-    // Hey server, tell me about you.
-    mySocket->write("hello");
+    buffer.clear();
+    buffer.append(255);//char1 is 255
+    buffer.append(0x07);//char2 is 0x07
+    buffer.append(240);//char3 & char4 are the leftspeed control
+    buffer.append(1);//char4
+    buffer.append(120);//char5 & char6 are the rightspeed control
+    buffer.append(1);//char6
+    buffer.append(0b01010000);//char 7
+
+
+    //Calcul du CRC
+    unsigned short crc = Crc16((unsigned char* )buffer.constData(), buffer.length());
+    buffer.append(crc); //8
+    buffer.append((crc>>8)); //9
+
+    qDebug() << buffer;
+    mySocket->write(buffer);
 }
 
 void MainWindow::disconnected()
@@ -73,5 +88,36 @@ void MainWindow::readyRead()
 
 void MainWindow::on_btnDeconnect_clicked()
 {
-
+    mySocket->disconnectFromHost();
 }
+
+
+
+
+//Calcul du Crc16
+short MainWindow::Crc16(unsigned char *Adresse_tab , unsigned char Taille_max)
+{
+    unsigned int Crc = 0xFFFF;
+    unsigned int Polynome = 0xA001;
+    unsigned int CptOctet = 0;
+    unsigned int CptBit = 0;
+    unsigned int Parity= 0;
+
+    //On commence à 1 car il est déconseillé dans la documentation d'utiliser l'octet 255 que l'ont a au debut
+    for (CptOctet = 1; CptOctet < Taille_max ; CptOctet++)
+    {
+        Crc ^= *( Adresse_tab + CptOctet);
+
+        for ( CptBit = 0; CptBit <= 7 ; CptBit++)
+        {
+            Parity= Crc;
+            Crc >>= 1;
+            if (Parity%2 == true) Crc ^= Polynome;
+        }
+    }
+    return(Crc);
+}
+
+
+
+

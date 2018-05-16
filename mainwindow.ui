@@ -241,7 +241,7 @@
    <widget class="QFrame" name="frame_2">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>7</x>
       <y>10</y>
       <width>641</width>
       <height>481</height>

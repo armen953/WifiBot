@@ -27,12 +27,17 @@ private slots:
     void readyRead();
     void connected();
     void disconnected();
+    short Crc16(unsigned char *Adresse_tab , unsigned char Taille_max);
+
+
+
 
 private:
     Ui::MainWindow *ui;
     QTcpSocket * mySocket;
     QString hostname;
     int port;
+    QByteArray buffer;
 };
 
 #endif // MAINWINDOW_H

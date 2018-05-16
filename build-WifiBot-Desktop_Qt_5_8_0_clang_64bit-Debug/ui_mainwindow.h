@@ -115,7 +115,7 @@ public:
         label_4->setGeometry(QRect(690, 160, 60, 16));
         frame_2 = new QFrame(centralWidget);
         frame_2->setObjectName(QStringLiteral("frame_2"));
-        frame_2->setGeometry(QRect(10, 10, 641, 481));
+        frame_2->setGeometry(QRect(7, 10, 641, 481));
         frame_2->setFrameShape(QFrame::StyledPanel);
         frame_2->setFrameShadow(QFrame::Raised);
         MainWindow->setCentralWidget(centralWidget);
