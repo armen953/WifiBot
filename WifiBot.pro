@@ -12,8 +12,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    wifibotcontroller.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    wifibotcontroller.h \
+    direction.h
 
 FORMS    += mainwindow.ui

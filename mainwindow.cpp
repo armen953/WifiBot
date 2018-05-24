@@ -1,8 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-
-
+/**
+ * @brief Constructor of the class
+ * @param parent
+ */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -13,38 +15,107 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->bas->setArrowType(Qt::DownArrow);
     this->ui->droite->setArrowType(Qt::RightArrow);
     this->ui->gauche->setArrowType(Qt::LeftArrow);
+
+    this->setWindowTitle("WIFIBOT MAHMEDOV PATRU");
+
+    //center the window on the screen ceneter
+    QRect position = frameGeometry();
+    move(position.center());
+
+    this->wifibotcontroller = new WifiBotController(this);
 }
 
+/**
+ * @brief Destructor (free the memory alocated)
+ */
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete wifibotcontroller;
 }
 
+/**
+ * @brief Event when a key is pressed
+ * @param event the event
+ */
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+    case Qt::Key_Z: // move forward
+        this->wifibotcontroller->moveWifibot(Direction::up,240,240);
+        break;
+
+    case Qt::Key_Q:  // go left
+        this->wifibotcontroller->moveWifibot(Direction::left,240,240);
+        break;
+
+    case Qt::Key_S: // go back
+
+        break;
+
+    case Qt::Key_D: //go right
+
+        break;
+
+    case Qt::Key_Up: // up camera
+
+        break;
+
+    case Qt::Key_Down: // down camera
+
+        break;
+
+    case Qt::Key_Left: // move left camera
+
+        break;
+
+    case Qt::Key_Right: // move right camera
+
+        break;
+    }
+}
+
+/**
+ * @brief Event when a key is released
+ * @param event the event
+ */
+void MainWindow::keyReleaseEvent(QKeyEvent *event)
+{
+    switch(event->key()){
+    case Qt::Key_Z:
+
+        break;
+    case Qt::Key_Q:
+
+        break;
+    case Qt::Key_S:
+
+        break;
+    case Qt::Key_D:
+
+        break;
+    }
+}
+
+//void MainWindow::displayWarningOnScreen(QString title, QString mgs)
+//{
+//     QMessageBox::warning(this, title, mgs, QMessageBox::Ok);
+//}
+
+/**
+ * @brief Event when the connecion button is pressed
+ */
 void MainWindow::on_btnConnect_clicked()
 {
     this->hostname = ui->hostname->text();
     this->port = ui->port->text().toInt();
+    this->wifibotcontroller->hello();
 
-    this->mySocket = new QTcpSocket(this);
-
-    connect(mySocket, SIGNAL(connected()),this, SLOT(connected()));
-    connect(mySocket, SIGNAL(disconnected()),this, SLOT(disconnected()));
-    connect(mySocket, SIGNAL(bytesWritten(qint64)),this, SLOT(bytesWritten(qint64)));
-    connect(mySocket, SIGNAL(readyRead()),this, SLOT(readyRead()));
-
-    qDebug() << "connecting...";
-
-    // this is not blocking call
-    mySocket->connectToHost(this->hostname, this->port);
-
-    // we need to wait...
-    if(!mySocket->waitForConnected(5000))
-    {
-        qDebug() << "Error: " << mySocket->errorString();
-    }
+    this->wifibotcontroller->attemptConnection(this->hostname, this->port);
 }
 
-void MainWindow::connected()
+/*
+void MainWindow::whenConnected()
 {
     qDebug() << "connected...";
 
@@ -66,58 +137,12 @@ void MainWindow::connected()
     qDebug() << buffer;
     mySocket->write(buffer);
 }
+*/
 
-void MainWindow::disconnected()
-{
-    qDebug() << "disconnected...";
-}
-
-void MainWindow::bytesWritten(qint64 bytes)
-{
-    qDebug() << bytes << " bytes written...";
-}
-
-void MainWindow::readyRead()
-{
-    qDebug() << "reading...";
-
-    // read the data from the socket
-    qDebug() << mySocket->readAll();
-}
-
-
+/**
+ * @brief Event when deconnect button is pressed
+ */
 void MainWindow::on_btnDeconnect_clicked()
 {
-    mySocket->disconnectFromHost();
+    this->wifibotcontroller->endConnection();
 }
-
-
-
-
-//Calcul du Crc16
-short MainWindow::Crc16(unsigned char *Adresse_tab , unsigned char Taille_max)
-{
-    unsigned int Crc = 0xFFFF;
-    unsigned int Polynome = 0xA001;
-    unsigned int CptOctet = 0;
-    unsigned int CptBit = 0;
-    unsigned int Parity= 0;
-
-    //On commence à 1 car il est déconseillé dans la documentation d'utiliser l'octet 255 que l'ont a au debut
-    for (CptOctet = 1; CptOctet < Taille_max ; CptOctet++)
-    {
-        Crc ^= *( Adresse_tab + CptOctet);
-
-        for ( CptBit = 0; CptBit <= 7 ; CptBit++)
-        {
-            Parity= Crc;
-            Crc >>= 1;
-            if (Parity%2 == true) Crc ^= Polynome;
-        }
-    }
-    return(Crc);
-}
-
-
-
-
