@@ -42,19 +42,26 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key()) {
     case Qt::Key_Z: // move forward
-        this->wifibotcontroller->moveWifibot(Direction::up,240,240);
+        //this->wifibotcontroller->moveWifibot(Direction::up,240,240);
+        //this->wifibotcontroller->setIsMovingForward(true);
+
+        ui->z->animateClick();
+        // FAIRE ANIMATE CLICK OU APPELER LA FNC POUR PASSER A TRUE
+
+        //qDebug() << this->wifibotcontroller->getIsMovingForward();
         break;
 
     case Qt::Key_Q:  // go left
+        this->wifibotcontroller->setIsGoingLeft(true);
         this->wifibotcontroller->moveWifibot(Direction::left,240,240);
         break;
 
     case Qt::Key_S: // go back
-
+        this->wifibotcontroller->setIsMovingBack(true);
         break;
 
     case Qt::Key_D: //go right
-
+        this->wifibotcontroller->setIsGoingRight(true);
         break;
 
     case Qt::Key_Up: // up camera
@@ -84,15 +91,16 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
     switch(event->key()){
     case Qt::Key_Z:
 
+        //qDebug() << this->wifibotcontroller->getIsMovingForward();
         break;
     case Qt::Key_Q:
-
+        this->wifibotcontroller->setIsGoingLeft(false);
         break;
     case Qt::Key_S:
-
+        this->wifibotcontroller->setIsMovingBack(false);
         break;
     case Qt::Key_D:
-
+        this->wifibotcontroller->setIsGoingRight(true);
         break;
     }
 }
@@ -145,4 +153,47 @@ void MainWindow::whenConnected()
 void MainWindow::on_btnDeconnect_clicked()
 {
     this->wifibotcontroller->endConnection();
+}
+
+
+void MainWindow::on_z_pressed()
+{
+    this->wifibotcontroller->setIsMovingForward(true);
+    this->wifibotcontroller->sendData();
+}
+
+void MainWindow::on_q_pressed()
+{
+    this->wifibotcontroller->setIsGoingLeft(true);
+}
+
+void MainWindow::on_s_pressed()
+{
+    this->wifibotcontroller->setIsMovingBack(true);
+}
+
+void MainWindow::on_d_pressed()
+{
+    this->wifibotcontroller->setIsGoingRight(true);
+}
+
+
+void MainWindow::on_z_released()
+{
+    this->wifibotcontroller->setIsMovingForward(false);
+}
+
+void MainWindow::on_q_released()
+{
+    this->wifibotcontroller->setIsGoingLeft(false);
+}
+
+void MainWindow::on_s_released()
+{
+    this->wifibotcontroller->setIsMovingBack(false);
+}
+
+void MainWindow::on_d_released()
+{
+    this->wifibotcontroller->setIsGoingRight(false);
 }

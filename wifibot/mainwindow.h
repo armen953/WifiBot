@@ -31,6 +31,22 @@ private slots:
     void on_btnDeconnect_clicked();
 
 
+    void on_z_pressed();
+
+    void on_z_released();
+
+    void on_d_pressed();
+
+    void on_d_released();
+
+    void on_s_pressed();
+
+    void on_s_released();
+
+    void on_q_pressed();
+
+    void on_q_released();
+
 private:
     Ui::MainWindow *ui;
     WifiBotController* wifibotcontroller;

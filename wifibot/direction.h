@@ -2,6 +2,7 @@
 #define DIRECTION
 
 namespace Direction {
+    static const int dontMove = 0;
     static const int up = 1;
     static const int left = 2;
     static const int back = 3;
@@ -9,4 +10,3 @@ namespace Direction {
 }
 
 #endif // DIRECTION
-

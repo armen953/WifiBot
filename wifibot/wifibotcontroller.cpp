@@ -7,6 +7,17 @@
 WifiBotController::WifiBotController(QObject *parent) : QObject(parent)
 {
     this->buffer = new QByteArray();
+    this->isMovingForward = false;
+    this->isMovingBack = false;
+    this->isGoingLeft = false;
+    this->isGoingRight = false;
+
+    //Gestion de l'envoi régulier de notre buffer afin de faire bouger le wifibot
+    timer = new QTimer(this);
+    timer->setInterval(25);
+    //connect(timer, SIGNAL(timeout()),this,SLOT(sendData()));
+    //connect(timer, SIGNAL(timeout()),this,SLOT(reception()));
+
 }
 
 /**
@@ -15,6 +26,7 @@ WifiBotController::WifiBotController(QObject *parent) : QObject(parent)
 WifiBotController::~WifiBotController()
 {
     delete buffer;
+    delete timer;
 }
 
 /**
@@ -42,6 +54,7 @@ bool WifiBotController::attemptConnection(QString hostname, int port)
     // if we have no response in 5 sec then there is an error
     if(mySocket->waitForConnected(5000)){
         isConnected = true;
+        this->timer->start();
     } else {
         qDebug() << "Error: " << mySocket->errorString();
     }
@@ -54,6 +67,8 @@ bool WifiBotController::attemptConnection(QString hostname, int port)
 void WifiBotController::endConnection()
 {
     this->mySocket->disconnectFromHost();
+    this->timer->stop();
+    this->buffer->clear();
 }
 
 void WifiBotController::moveWifibot(int direction, int leftspeed, int rightspeed)
@@ -80,11 +95,11 @@ void WifiBotController::moveWifibot(int direction, int leftspeed, int rightspeed
     if (direction == Direction::up){//76543210
         this->buffer->append((char) 0b01010000); // up   101 (bit 6 et 4)
     } else if (direction == Direction::left){
-        this->buffer->append((char) 0b00010000); // left
+        this->buffer->append((char) 0b00010000); // left  move only right wheels =>   01
     } else if (direction == Direction::back){
-        this->buffer->append((char) 0b00000000); // back
+        this->buffer->append((char) 0b00000000); // back                              00
     } else if (direction == Direction::right){
-        this->buffer->append((char) 0b01000000); // right
+        this->buffer->append((char) 0b01000000); // right  move only left wheels  =>  10
     }
 
     //Calcul CRC
@@ -191,6 +206,41 @@ short WifiBotController::Crc16(unsigned char *Adresse_tab , unsigned char Taille
     return(Crc);
 }
 
+void WifiBotController::sendData()
+{
+    if (this->isMovingForward && !this->isGoingLeft && !this->isMovingBack && !this->isGoingRight) {
+        // the car move forward
+        moveWifibot(Direction::up, 240, 240);
+    } else if (this->isMovingBack && !this->isMovingForward && !this->isGoingLeft && !this->isGoingRight) {
+        // the car move back
+        moveWifibot(Direction::back, 240, 240);
+    } else if (this->isGoingLeft && !this->isMovingForward && !this->isMovingBack && !this->isGoingRight) {
+        // the car move left
+        moveWifibot(Direction::left, 240, 240);
+    } else if (this->isGoingRight && !this->isMovingForward && !this->isMovingBack && !this->isGoingLeft) {
+        // the car move right
+        moveWifibot(Direction::right, 240, 240);
+    } else if (this->isMovingForward && this->isGoingLeft && !this->isGoingRight && !this->isMovingBack) {
+        // the car move forward left
+
+    } else if (this->isMovingForward && this->isGoingRight && !this->isGoingLeft && !this->isMovingBack) {
+        // the car move forward right
+
+    } else if (this->isMovingBack && this->isGoingLeft && !this->isGoingRight && this->isMovingForward) {
+        // the car move back left
+
+    } else if (this->isMovingBack && this->isGoingRight && !this->isGoingLeft && this->isMovingForward) {
+        // the car move back right
+
+    } else {
+        // the car dont move
+        moveWifibot(Direction::dontMove, 0, 0);
+    }
+
+    this->mySocket->write(* this->buffer);
+
+}
+
 /*==================================================================
 #                       Getters AND Setters                        #
 ===================================================================*/
@@ -235,4 +285,42 @@ void WifiBotController::setBuffer(QByteArray *value)
     buffer = value;
 }
 
+bool WifiBotController::getIsMovingForward() const
+{
+    return isMovingForward;
+}
 
+void WifiBotController::setIsMovingForward(bool value)
+{
+    isMovingForward = value;
+}
+
+bool WifiBotController::getIsMovingBack() const
+{
+    return isMovingBack;
+}
+
+void WifiBotController::setIsMovingBack(bool value)
+{
+    isMovingBack = value;
+}
+
+bool WifiBotController::getIsGoingLeft() const
+{
+    return isGoingLeft;
+}
+
+void WifiBotController::setIsGoingLeft(bool value)
+{
+    isGoingLeft = value;
+}
+
+bool WifiBotController::getIsGoingRight() const
+{
+    return isGoingRight;
+}
+
+void WifiBotController::setIsGoingRight(bool value)
+{
+    isGoingRight = value;
+}
