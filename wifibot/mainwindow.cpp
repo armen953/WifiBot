@@ -10,11 +10,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     QMainWindow::setFocus();
-    ui->setupUi(this);
+    this->ui->setupUi(this);
     this->ui->haut->setArrowType(Qt::UpArrow);
     this->ui->bas->setArrowType(Qt::DownArrow);
     this->ui->droite->setArrowType(Qt::RightArrow);
     this->ui->gauche->setArrowType(Qt::LeftArrow);
+
+    // init label with slider value
+    this->ui->labelVitesse->setText(QString::number(this->ui->vitesse->value()));
+
+    // chnage the color of batterie indicotor to green
+    ui->batterie->setStyleSheet(this->battrieSafeColor);
+
 
     this->setWindowTitle("WIFIBOT MAHMEDOV PATRU");
 
@@ -23,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
     move(position.center());
 
     this->wifibotcontroller = new WifiBotController(this);
+    this->cameraControl = new QNetworkAccessManager();
+    connect( this->ui->vitesse, SIGNAL(valueChanged(int)), SLOT(setValueToTheLabel(int)) );
 }
 
 /**
@@ -30,8 +39,9 @@ MainWindow::MainWindow(QWidget *parent) :
  */
 MainWindow::~MainWindow()
 {
-    delete ui;
+    delete this->ui;
     delete wifibotcontroller;
+    delete cameraControl;
 }
 
 /**
@@ -45,7 +55,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         //this->wifibotcontroller->moveWifibot(Direction::up,240,240);
         //this->wifibotcontroller->setIsMovingForward(true);
 
-        ui->z->animateClick();
+        this->ui->z->animateClick();
         // FAIRE ANIMATE CLICK OU APPELER LA FNC POUR PASSER A TRUE
 
         //qDebug() << this->wifibotcontroller->getIsMovingForward();
@@ -64,20 +74,20 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         this->wifibotcontroller->setIsGoingRight(true);
         break;
 
-    case Qt::Key_Up: // up camera
-
+    case Qt::Key_Up: // up camezra
+        this->ui->haut->animateClick();
         break;
 
     case Qt::Key_Down: // down camera
-
+        this->ui->bas->animateClick();
         break;
 
     case Qt::Key_Left: // move left camera
-
+        this->ui->gauche->animateClick();
         break;
 
     case Qt::Key_Right: // move right camera
-
+        this->ui->droite->animateClick();
         break;
     }
 }
@@ -120,39 +130,14 @@ void MainWindow::on_btnConnect_clicked()
     this->wifibotcontroller->hello();
 
     qDebug() << this->wifibotcontroller->attemptConnection(this->hostname, this->port);
-    QString source = "http://"+ui->hostname->text()+":8080/javascript_simple.html";
+    QString source = "http://" + ui->hostname->text() + ":8080/javascript_simple.html";  // ou /?action=stream
     qDebug() << source;
-      ui->camera->load(QUrl(source));
-      ui->camera->setZoomFactor(1.4);
-      ui->camera->setStyleSheet("background-color:#ffffff;");
-      ui->camera->setZoomFactor(1.8);
-      ui->camera->show();
+    this->ui->camera->load(QUrl(source));
+    this->ui->camera->setZoomFactor(1.4);
+    this->ui->camera->setStyleSheet("background-color:#ffffff;");
+    this->ui->camera->setZoomFactor(1.8);
+    this->ui->camera->show();
 }
-
-/*
-void MainWindow::whenConnected()
-{
-    qDebug() << "connected...";
-
-    buffer.clear();
-    buffer.append(255);//char1 is 255
-    buffer.append(0x07);//char2 is 0x07
-    buffer.append(240);//char3 & char4 are the leftspeed control
-    buffer.append(1);//char4
-    buffer.append(120);//char5 & char6 are the rightspeed control
-    buffer.append(1);//char6
-    buffer.append(0b01010000);//char 7
-
-
-    //Calcul du CRC
-    unsigned short crc = Crc16((unsigned char* )buffer.constData(), buffer.length());
-    buffer.append(crc); //8
-    buffer.append((crc>>8)); //9
-
-    qDebug() << buffer;
-    mySocket->write(buffer);
-}
-*/
 
 /**
  * @brief Event when deconnect button is pressed
@@ -160,48 +145,118 @@ void MainWindow::whenConnected()
 void MainWindow::on_btnDeconnect_clicked()
 {
     this->wifibotcontroller->endConnection();
-     ui->camera->stop();
+    ui->camera->stop();
 }
 
+/**
+ * @brief MainWindow::setValueToTheLabel
+ * @param value
+ */
+void MainWindow::setValueToTheLabel(int value)
+{
+     this->ui->labelVitesse->setText(QString::number(value));
+}
 
+/**
+ * @brief MainWindow::on_z_pressed
+ */
 void MainWindow::on_z_pressed()
 {
     this->wifibotcontroller->setIsMovingForward(true);
     this->wifibotcontroller->sendData();
 }
 
+/**
+ * @brief MainWindow::on_q_pressed
+ */
 void MainWindow::on_q_pressed()
 {
     this->wifibotcontroller->setIsGoingLeft(true);
 }
 
+/**
+ * @brief MainWindow::on_s_pressed
+ */
 void MainWindow::on_s_pressed()
 {
     this->wifibotcontroller->setIsMovingBack(true);
 }
 
+/**
+ * @brief MainWindow::on_d_pressed
+ */
 void MainWindow::on_d_pressed()
 {
     this->wifibotcontroller->setIsGoingRight(true);
 }
 
-
+/**
+ * @brief MainWindow::on_z_released
+ */
 void MainWindow::on_z_released()
 {
     this->wifibotcontroller->setIsMovingForward(false);
 }
 
+/**
+ * @brief MainWindow::on_q_released
+ */
 void MainWindow::on_q_released()
 {
     this->wifibotcontroller->setIsGoingLeft(false);
 }
 
+/**
+ * @brief MainWindow::on_s_released
+ */
 void MainWindow::on_s_released()
 {
     this->wifibotcontroller->setIsMovingBack(false);
 }
 
+/**
+ * @brief MainWindow::on_d_released
+ */
 void MainWindow::on_d_released()
 {
     this->wifibotcontroller->setIsGoingRight(false);
+}
+
+/*=================================
+*       MOVE CAMERA EVENTS
+=================================*/
+/**
+ * @brief MainWindow::on_haut_clicked
+ */
+void MainWindow::on_haut_clicked()
+{
+    QUrl url("http://" + ui->hostname->text() + ":8080" + CameraDirection::up);
+    this->cameraControl->get(QNetworkRequest(url));
+}
+
+/**
+ * @brief MainWindow::on_gauche_clicked
+ */
+void MainWindow::on_gauche_clicked()
+{
+    QUrl url("http://" + ui->hostname->text()+ ":8080" + CameraDirection::left);
+    this->cameraControl->get(QNetworkRequest(url));
+}
+
+/**
+ * @brief MainWindow::on_bas_clicked
+ */
+void MainWindow::on_bas_clicked()
+{
+    QUrl url("http://" + ui->hostname->text() + ":8080" + CameraDirection::down);
+    this->cameraControl->get(QNetworkRequest(url));
+}
+
+/**
+ * @brief MainWindow::on_droite_clicked
+ */
+void MainWindow::on_droite_clicked()
+{
+    QUrl url("http://" + ui->hostname->text()+":8080" + CameraDirection::right);
+    this->cameraControl->get(QNetworkRequest(url));
 }

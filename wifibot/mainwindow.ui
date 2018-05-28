@@ -159,7 +159,7 @@
       <string>caméra</string>
      </property>
     </widget>
-    <widget class="QSlider" name="verticalSlider">
+    <widget class="QSlider" name="vitesse">
      <property name="geometry">
       <rect>
        <x>230</x>
@@ -168,8 +168,53 @@
        <height>160</height>
       </rect>
      </property>
+     <property name="maximum">
+      <number>240</number>
+     </property>
+     <property name="value">
+      <number>120</number>
+     </property>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelVitesse">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>30</y>
+       <width>54</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="batterie">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>30</y>
+       <width>118</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelBatterie">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>30</y>
+       <width>121</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Niveau de la Batterie </string>
      </property>
     </widget>
    </widget>
@@ -239,20 +284,14 @@
      <string>Deconnexion</string>
     </property>
    </widget>
-   <widget class="QWebEngineView" name="camera">
+   <widget class="QWebEngineView" name="camera" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>0</y>
-      <width>631</width>
-      <height>481</height>
+      <y>10</y>
+      <width>621</width>
+      <height>471</height>
      </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
     </property>
    </widget>
   </widget>
@@ -280,7 +319,7 @@
  <customwidgets>
   <customwidget>
    <class>QWebEngineView</class>
-   <extends>QFrame</extends>
+   <extends>QWidget</extends>
    <header>qwebengineview.h</header>
    <container>1</container>
   </customwidget>
