@@ -119,7 +119,14 @@ void MainWindow::on_btnConnect_clicked()
     this->port = ui->port->text().toInt();
     this->wifibotcontroller->hello();
 
-    this->wifibotcontroller->attemptConnection(this->hostname, this->port);
+    qDebug() << this->wifibotcontroller->attemptConnection(this->hostname, this->port);
+    QString source = "http://"+ui->hostname->text()+":8080/javascript_simple.html";
+    qDebug() << source;
+      ui->camera->load(QUrl(source));
+      ui->camera->setZoomFactor(1.4);
+      ui->camera->setStyleSheet("background-color:#ffffff;");
+      ui->camera->setZoomFactor(1.8);
+      ui->camera->show();
 }
 
 /*
@@ -153,6 +160,7 @@ void MainWindow::whenConnected()
 void MainWindow::on_btnDeconnect_clicked()
 {
     this->wifibotcontroller->endConnection();
+     ui->camera->stop();
 }
 
 

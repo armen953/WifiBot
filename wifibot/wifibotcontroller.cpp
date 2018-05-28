@@ -15,7 +15,7 @@ WifiBotController::WifiBotController(QObject *parent) : QObject(parent)
     //Gestion de l'envoi régulier de notre buffer afin de faire bouger le wifibot
     timer = new QTimer(this);
     timer->setInterval(25);
-    //connect(timer, SIGNAL(timeout()),this,SLOT(sendData()));
+    connect(timer, SIGNAL(timeout()),this,SLOT(sendData()));
     //connect(timer, SIGNAL(timeout()),this,SLOT(reception()));
 
 }
@@ -56,6 +56,7 @@ bool WifiBotController::attemptConnection(QString hostname, int port)
         isConnected = true;
         this->timer->start();
     } else {
+        isConnected = false;
         qDebug() << "Error: " << mySocket->errorString();
     }
     return isConnected;
@@ -129,7 +130,7 @@ void WifiBotController::hello()
 void WifiBotController::whenConnected()
 {
     qDebug() << "connected";
-
+/*
     this->buffer->clear();
     this->buffer->append(255);//char1 is 255
     this->buffer->append(0x07);//char2 is 0x07
@@ -147,6 +148,7 @@ void WifiBotController::whenConnected()
 
     qDebug() << this->buffer;
     this->mySocket->write(*this->buffer);
+    */
 }
 
 /**
