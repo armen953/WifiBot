@@ -31,7 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->wifibotcontroller = new WifiBotController(this);
     this->cameraControl = new QNetworkAccessManager();
-    connect( this->ui->vitesse, SIGNAL(valueChanged(int)), SLOT(setValueToTheLabel(int)) );
+    connect(this->ui->vitesse, SIGNAL(valueChanged(int)), SLOT(setValueToTheLabel(int)));
+    disableInterface();
 }
 
 /**
@@ -55,15 +56,17 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         //this->wifibotcontroller->moveWifibot(Direction::up,240,240);
         //this->wifibotcontroller->setIsMovingForward(true);
 
-        this->ui->z->animateClick();
+        this->ui->z->animateClick();  // call the function
         // FAIRE ANIMATE CLICK OU APPELER LA FNC POUR PASSER A TRUE
+
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! FAIRE PAREIL QU'ICI POUR LES AUTRES
 
         //qDebug() << this->wifibotcontroller->getIsMovingForward();
         break;
 
     case Qt::Key_Q:  // go left
         this->wifibotcontroller->setIsGoingLeft(true);
-        this->wifibotcontroller->moveWifibot(Direction::left,240,240);
+//        this->wifibotcontroller->moveWifibot(Direction::left,240,240);
         break;
 
     case Qt::Key_S: // go back
@@ -100,7 +103,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
     switch(event->key()){
     case Qt::Key_Z:
-
+        this->wifibotcontroller->setIsMovingForward(false);
         //qDebug() << this->wifibotcontroller->getIsMovingForward();
         break;
     case Qt::Key_Q:
@@ -110,9 +113,59 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         this->wifibotcontroller->setIsMovingBack(false);
         break;
     case Qt::Key_D:
-        this->wifibotcontroller->setIsGoingRight(true);
+        this->wifibotcontroller->setIsGoingRight(false);
         break;
     }
+}
+
+/**
+ * @brief disable interface
+ * disable interface when client is not conectd whith wifibot
+ * And enable the hostname, port and connec button
+ */
+void MainWindow::disableInterface()
+{
+    QMainWindow::setFocus();
+    // disable controll interface
+    this->ui->z->setEnabled(false);
+    this->ui->q->setEnabled(false);
+    this->ui->s->setEnabled(false);
+    this->ui->d->setEnabled(false);
+    this->ui->vitesse->setEnabled(false);
+    this->ui->haut->setEnabled(false);
+    this->ui->bas->setEnabled(false);
+    this->ui->gauche->setEnabled(false);
+    this->ui->droite->setEnabled(false);
+    // enable connection info interface
+    this->ui->btnDeconnect->setEnabled(false);
+    this->ui->hostname->setEnabled(true);
+    this->ui->port->setEnabled(true);
+    this->ui->btnConnect->setEnabled(true);
+}
+
+/**
+ * @brief enable interface
+ * enable interface when successfuly connected with the wifibot
+ * And disable the hostname, port and connec button
+ */
+void MainWindow::enableInterface()
+{
+    QMainWindow::setFocus();
+    // enable controll interface
+    this->ui->z->setEnabled(true);
+    this->ui->q->setEnabled(true);
+    this->ui->s->setEnabled(true);
+    this->ui->d->setEnabled(true);
+    this->ui->vitesse->setEnabled(true);
+    this->ui->haut->setEnabled(true);
+    this->ui->bas->setEnabled(true);
+    this->ui->gauche->setEnabled(true);
+    this->ui->droite->setEnabled(true);
+    // disable connection info interface
+    this->ui->btnDeconnect->setEnabled(true);
+    this->ui->hostname->setEnabled(false);
+    this->ui->port->setEnabled(false);
+    this->ui->btnConnect->setEnabled(false);
 }
 
 //void MainWindow::displayWarningOnScreen(QString title, QString mgs)
@@ -122,6 +175,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
 
 /**
  * @brief Event when the connecion button is pressed
+ * Connection
  */
 void MainWindow::on_btnConnect_clicked()
 {
@@ -130,6 +184,7 @@ void MainWindow::on_btnConnect_clicked()
     this->wifibotcontroller->hello();
 
     qDebug() << this->wifibotcontroller->attemptConnection(this->hostname, this->port);
+    // stocker le retour de attemptConnection dans un bool et faire le reste quand le boot = true
     QString source = "http://" + ui->hostname->text() + ":8080/javascript_simple.html";  // ou /?action=stream
     qDebug() << source;
     this->ui->camera->load(QUrl(source));
@@ -137,15 +192,18 @@ void MainWindow::on_btnConnect_clicked()
     this->ui->camera->setStyleSheet("background-color:#ffffff;");
     this->ui->camera->setZoomFactor(1.8);
     this->ui->camera->show();
+    enableInterface();
 }
 
 /**
  * @brief Event when deconnect button is pressed
+ * Deconnection
  */
 void MainWindow::on_btnDeconnect_clicked()
 {
     this->wifibotcontroller->endConnection();
-    ui->camera->stop();
+    this->ui->camera->stop();
+    disableInterface();
 }
 
 /**
@@ -163,7 +221,6 @@ void MainWindow::setValueToTheLabel(int value)
 void MainWindow::on_z_pressed()
 {
     this->wifibotcontroller->setIsMovingForward(true);
-    this->wifibotcontroller->sendData();
 }
 
 /**

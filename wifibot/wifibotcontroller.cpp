@@ -17,7 +17,6 @@ WifiBotController::WifiBotController(QObject *parent) : QObject(parent)
     timer->setInterval(25);
     connect(timer, SIGNAL(timeout()),this,SLOT(sendData()));
     //connect(timer, SIGNAL(timeout()),this,SLOT(reception()));
-
 }
 
 /**
@@ -27,6 +26,7 @@ WifiBotController::~WifiBotController()
 {
     delete buffer;
     delete timer;
+    delete mySocket;
 }
 
 /**
@@ -211,17 +211,13 @@ short WifiBotController::Crc16(unsigned char *Adresse_tab , unsigned char Taille
 void WifiBotController::sendData()
 {
     if (this->isMovingForward && !this->isGoingLeft && !this->isMovingBack && !this->isGoingRight) {
-        // the car move forward
-        moveWifibot(Direction::up, 240, 240);
+        moveWifibot(Direction::up, 240, 240);       // the car move forward
     } else if (this->isMovingBack && !this->isMovingForward && !this->isGoingLeft && !this->isGoingRight) {
-        // the car move back
-        moveWifibot(Direction::back, 240, 240);
+        moveWifibot(Direction::back, 240, 240);    // the car move back
     } else if (this->isGoingLeft && !this->isMovingForward && !this->isMovingBack && !this->isGoingRight) {
-        // the car move left
-        moveWifibot(Direction::left, 240, 240);
+        moveWifibot(Direction::left, 240, 240);   // the car move left
     } else if (this->isGoingRight && !this->isMovingForward && !this->isMovingBack && !this->isGoingLeft) {
-        // the car move right
-        moveWifibot(Direction::right, 240, 240);
+        moveWifibot(Direction::right, 240, 240);  // the car move right
     } else if (this->isMovingForward && this->isGoingLeft && !this->isGoingRight && !this->isMovingBack) {
         // the car move forward left
 
@@ -235,8 +231,7 @@ void WifiBotController::sendData()
         // the car move back right
 
     } else {
-        // the car dont move
-        moveWifibot(Direction::dontMove, 0, 0);
+        moveWifibot(Direction::dontMove, 0, 0);  // the car dont move
     }
 
     this->mySocket->write(* this->buffer);

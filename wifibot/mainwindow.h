@@ -25,6 +25,8 @@ public:
     ~MainWindow();
      void keyPressEvent(QKeyEvent *event);
      void keyReleaseEvent(QKeyEvent *event);
+     void disableInterface();
+     void enableInterface();
 
 
 private slots:
