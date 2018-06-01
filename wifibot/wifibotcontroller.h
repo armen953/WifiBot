@@ -9,17 +9,21 @@
 
 #include "direction.h"
 
+
 class WifiBotController: public QObject
 {
     Q_OBJECT
 
 public:
-    explicit WifiBotController(QObject *parent = 0);
+    explicit WifiBotController(QObject *parent);
     ~WifiBotController();
     bool attemptConnection(QString hostname, int port);
     void endConnection();
     void moveWifibot(int direction, int leftspeed, int rightspeed);
     short Crc16(unsigned char *Adresse_tab , unsigned char Taille_max);
+    void updateBatterie(unsigned char value);
+    void updateForwardDist(unsigned char leftDist, unsigned char rightDist);
+    void updateBackDist(unsigned char leftDist, unsigned char rightDist);
 
     void hello();
 
@@ -65,7 +69,6 @@ private slots:
     void whenReadyRead();
 public slots:
     void sendData();
-
 };
 
 #endif // WIFIBOTCONTROLLER_H

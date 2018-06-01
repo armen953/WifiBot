@@ -1,4 +1,5 @@
 #include "wifibotcontroller.h"
+#include "mainwindow.h"
 
 /**
  * @brief Constructor of the class
@@ -12,11 +13,10 @@ WifiBotController::WifiBotController(QObject *parent) : QObject(parent)
     this->isGoingLeft = false;
     this->isGoingRight = false;
 
-    //Gestion de l'envoi régulier de notre buffer afin de faire bouger le wifibot
+    //timer for send buffer at regular interval
     timer = new QTimer(this);
     timer->setInterval(25);
     connect(timer, SIGNAL(timeout()),this,SLOT(sendData()));
-    //connect(timer, SIGNAL(timeout()),this,SLOT(reception()));
 }
 
 /**
@@ -109,11 +109,9 @@ void WifiBotController::moveWifibot(int direction, int leftspeed, int rightspeed
     this->buffer->append(crc);        // Char8 (00000000 <-|    00000000)
     this->buffer->append((crc>>8));   // Char9 (00000000   | -> 00000000)
 
-    qDebug() << this->buffer; // show for debug
+    //qDebug() << this->buffer; // show for debug
 
-
-
-    this->mySocket->write(*this->buffer); // CHANGER ENDROIT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ //   this->mySocket->write(*this->buffer); // CHANGER ENDROIT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
 /**
@@ -130,25 +128,6 @@ void WifiBotController::hello()
 void WifiBotController::whenConnected()
 {
     qDebug() << "connected";
-/*
-    this->buffer->clear();
-    this->buffer->append(255);//char1 is 255
-    this->buffer->append(0x07);//char2 is 0x07
-    this->buffer->append(240);//char3 & char4 are the leftspeed control
-    this->buffer->append(1);//char4
-    this->buffer->append(120);//char5 & char6 are the rightspeed control
-    this->buffer->append(1);//char6
-    this->buffer->append(0b01010000);//char 7
-
-
-    //Calcul du CRC
-    unsigned short crc = Crc16((unsigned char* )this->buffer->constData(), this->buffer->length());
-    this->buffer->append(crc); //8
-    this->buffer->append((crc>>8)); //9
-
-    qDebug() << this->buffer;
-    this->mySocket->write(*this->buffer);
-    */
 }
 
 /**
@@ -173,10 +152,35 @@ void WifiBotController::whenBytesWritten(qint64 bytes)
  */
 void WifiBotController::whenReadyRead()
 {
-    qDebug() << "reading...";
+   qDebug() << "reading...";
+   QByteArray recept = this->mySocket->readAll();
+   this->updateBatterie((unsigned char)recept[2]);
+   this->updateBackDist(recept[12], recept[4]); // backleft backright
+   this->updateForwardDist(recept[3], recept[11]); // forwardleft forwardright
 
-    // read the data from the socket
-    qDebug() << mySocket->readAll();
+}
+
+void WifiBotController::updateBatterie(unsigned char value)
+{
+    MainWindow* mv = MainWindow::getMainWinPtr();     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! revoir
+    int pbat = (value);
+    qDebug() << value;
+    mv->updateBatterieUi(pbat);
+
+}
+
+void WifiBotController::updateForwardDist(unsigned char leftDist, unsigned char rightDist)
+{
+    MainWindow* mv = MainWindow::getMainWinPtr();
+    mv->updateDistanceForLeft((int)leftDist);
+    mv->updateDistanceForRight((int)rightDist);
+}
+
+void WifiBotController::updateBackDist(unsigned char leftDist, unsigned char rightDist)
+{
+    MainWindow* mv = MainWindow::getMainWinPtr();
+    mv->updateDistanceBackLeft((int)leftDist);
+    mv->updateDistanceBackRight((int)rightDist);
 }
 
 /**
@@ -208,16 +212,19 @@ short WifiBotController::Crc16(unsigned char *Adresse_tab , unsigned char Taille
     return(Crc);
 }
 
+
+
 void WifiBotController::sendData()
 {
+    MainWindow* mv = MainWindow::getMainWinPtr();
     if (this->isMovingForward && !this->isGoingLeft && !this->isMovingBack && !this->isGoingRight) {
-        moveWifibot(Direction::up, 240, 240);       // the car move forward
+        moveWifibot(Direction::up, mv->getVitesse(), mv->getVitesse());       // the car move forward
     } else if (this->isMovingBack && !this->isMovingForward && !this->isGoingLeft && !this->isGoingRight) {
-        moveWifibot(Direction::back, 240, 240);    // the car move back
+        moveWifibot(Direction::back, mv->getVitesse(), mv->getVitesse());    // the car move back
     } else if (this->isGoingLeft && !this->isMovingForward && !this->isMovingBack && !this->isGoingRight) {
-        moveWifibot(Direction::left, 240, 240);   // the car move left
+        moveWifibot(Direction::left, mv->getVitesse(), mv->getVitesse());   // the car move left
     } else if (this->isGoingRight && !this->isMovingForward && !this->isMovingBack && !this->isGoingLeft) {
-        moveWifibot(Direction::right, 240, 240);  // the car move right
+        moveWifibot(Direction::right, mv->getVitesse(), mv->getVitesse());  // the car move right
     } else if (this->isMovingForward && this->isGoingLeft && !this->isGoingRight && !this->isMovingBack) {
         // the car move forward left
 
