@@ -179,11 +179,6 @@ MainWindow *MainWindow::getMainWinPtr()
     return pMainWindow;
 }
 
-//void MainWindow::displayWarningOnScreen(QString title, QString mgs)
-//{
-//     QMessageBox::warning(this, title, mgs, QMessageBox::Ok);
-//}
-
 /**
  * @brief Event when the connecion button is pressed
  * Connection
@@ -343,7 +338,6 @@ void MainWindow::updateBatterieUi(unsigned char value)
             ui->batterie->setStyleSheet(this->battrieSafeColor);
         }
     }
-    // update BATTTTTT
 }
 /**
  * @brief Get speed value of the slider
@@ -363,7 +357,9 @@ void MainWindow::updateDistanceForLeft(int value)
     this->ui->avantGauche->setValue(value);
     if (value > 100){
         ui->avantGauche->setStyleSheet(this->battrieDangerColor);
-    }else {
+    } else if(value >50 && value <100){
+        ui->avantGauche->setStyleSheet(this->battrieOrange);
+    } else {
         ui->avantGauche->setStyleSheet(this->battrieSafeColor);
     }
 }
@@ -373,6 +369,8 @@ void MainWindow::updateDistanceForRight(int value)
     this->ui->avantDroit->setValue(value);
     if (value > 100){
         ui->avantDroit->setStyleSheet(this->battrieDangerColor);
+    } else if(value >50 && value <100){
+        ui->avantDroit->setStyleSheet(this->battrieOrange);
     }else {
         ui->avantDroit->setStyleSheet(this->battrieSafeColor);
     }
@@ -383,7 +381,9 @@ void MainWindow::updateDistanceBackLeft(int value)
     this->ui->ariereGauche->setValue(value);
     if (value > 100){
         ui->ariereGauche->setStyleSheet(this->battrieDangerColor);
-    }else {
+    } else if(value >50 && value <100){
+        ui->ariereGauche->setStyleSheet(this->battrieOrange);
+    } else {
         ui->ariereGauche->setStyleSheet(this->battrieSafeColor);
     }
 }
@@ -393,7 +393,9 @@ void MainWindow::updateDistanceBackRight(int value)
     this->ui->ariereDroit->setValue(value);
     if (value > 100){
         ui->ariereDroit->setStyleSheet(this->battrieDangerColor);
-    }else {
+    } else if(value >50 && value <100){
+        ui->ariereDroit->setStyleSheet(this->battrieOrange);
+    } else {
         ui->ariereDroit->setStyleSheet(this->battrieSafeColor);
     }
 }

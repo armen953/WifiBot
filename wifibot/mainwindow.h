@@ -65,8 +65,9 @@ private:
     int port;
     QNetworkAccessManager *cameraControl;
 
-    QString battrieSafeColor= "QProgressBar::chunk {background: green;}";
-    QString battrieDangerColor= "QProgressBar::chunk {background: red;}";
+    QString battrieSafeColor = "QProgressBar::chunk {background: green;}";
+    QString battrieOrange = "QProgressBar::chunk {background: orange;}";
+    QString battrieDangerColor = "QProgressBar::chunk {background: red;}";
 
     static MainWindow * pMainWindow;
 };

@@ -78,9 +78,9 @@ void WifiBotController::moveWifibot(int direction, int leftspeed, int rightspeed
     this->buffer->append(255);        // Char1 (255)
     this->buffer->append(0x07);       // Char2 (0x07)
     this->buffer->append(leftspeed);  // Char3 leftspeed control
-    this->buffer->append(1);          // Char4 leftspeed control
+    this->buffer->append((char)0);          // Char4 leftspeed control
     this->buffer->append(rightspeed); // Char5 rightspeed control
-    this->buffer->append(1);          // Char6 rightspeed control
+    this->buffer->append((char)0);          // Char6 rightspeed control
 
 //Char 7 is decomposed as follow (1 byte char -> 8 bits):
 //  (128) Bit 7 Left  Side Closed Loop Speed control      :: 1 -> ON      / 0 -> OFF
@@ -94,7 +94,7 @@ void WifiBotController::moveWifibot(int direction, int leftspeed, int rightspeed
 
     // for Char 7
     if (direction == Direction::up){//76543210
-        this->buffer->append((char) 0b01010000); // up   101 (bit 6 et 4)
+        this->buffer->append((char) 0b11110000); // up   101 (bit 6 et 4)
     } else if (direction == Direction::left){
         this->buffer->append((char) 0b00010000); // left  move only right wheels =>   01
     } else if (direction == Direction::back){
@@ -103,15 +103,13 @@ void WifiBotController::moveWifibot(int direction, int leftspeed, int rightspeed
         this->buffer->append((char) 0b01000000); // right  move only left wheels  =>  10
     }
 
-    //Calcul CRC
-    unsigned short crc = Crc16((unsigned char* )this->buffer->constData(), this->buffer->length());
-    // Char 8-9 is the CRC 16 bits (char 8 low char 9 high)
-    this->buffer->append(crc);        // Char8 (00000000 <-|    00000000)
-    this->buffer->append((crc>>8));   // Char9 (00000000   | -> 00000000)
-
-    //qDebug() << this->buffer; // show for debug
-
- //   this->mySocket->write(*this->buffer); // CHANGER ENDROIT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if (direction != Direction::dontMove){
+        //Calcul CRC
+        unsigned short crc = Crc16((unsigned char* )this->buffer->constData(), this->buffer->length());
+        // Char 8-9 is the CRC 16 bits (char 8 low char 9 high)
+        this->buffer->append(crc);        // Char8 (00000000 <-|    00000000)
+        this->buffer->append((crc>>8));   // Char9 (00000000   | -> 00000000)
+    }
 }
 
 /**
@@ -217,26 +215,16 @@ short WifiBotController::Crc16(unsigned char *Adresse_tab , unsigned char Taille
 void WifiBotController::sendData()
 {
     MainWindow* mv = MainWindow::getMainWinPtr();
+    qDebug() <<"LA VITESSE"<< mv->getVitesse();
+    int vitesse = mv->getVitesse();
     if (this->isMovingForward && !this->isGoingLeft && !this->isMovingBack && !this->isGoingRight) {
-        moveWifibot(Direction::up, mv->getVitesse(), mv->getVitesse());       // the car move forward
+        moveWifibot(Direction::up, vitesse, vitesse);       // the car move forward
     } else if (this->isMovingBack && !this->isMovingForward && !this->isGoingLeft && !this->isGoingRight) {
-        moveWifibot(Direction::back, mv->getVitesse(), mv->getVitesse());    // the car move back
+        moveWifibot(Direction::back, vitesse, vitesse);    // the car move back
     } else if (this->isGoingLeft && !this->isMovingForward && !this->isMovingBack && !this->isGoingRight) {
-        moveWifibot(Direction::left, mv->getVitesse(), mv->getVitesse());   // the car move left
+        moveWifibot(Direction::left, vitesse, vitesse);   // the car move left
     } else if (this->isGoingRight && !this->isMovingForward && !this->isMovingBack && !this->isGoingLeft) {
-        moveWifibot(Direction::right, mv->getVitesse(), mv->getVitesse());  // the car move right
-    } else if (this->isMovingForward && this->isGoingLeft && !this->isGoingRight && !this->isMovingBack) {
-        // the car move forward left
-
-    } else if (this->isMovingForward && this->isGoingRight && !this->isGoingLeft && !this->isMovingBack) {
-        // the car move forward right
-
-    } else if (this->isMovingBack && this->isGoingLeft && !this->isGoingRight && this->isMovingForward) {
-        // the car move back left
-
-    } else if (this->isMovingBack && this->isGoingRight && !this->isGoingLeft && this->isMovingForward) {
-        // the car move back right
-
+        moveWifibot(Direction::right, vitesse, vitesse);  // the car move right
     } else {
         moveWifibot(Direction::dontMove, 0, 0);  // the car dont move
     }
